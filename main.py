@@ -1,8 +1,9 @@
 from flask import Flask
 from wallet_route import wallet_bp
 from guess_route import guess_bp
-from dotenv import load_dotenv
 from admin_route import admin_bp
+from dotenv import load_dotenv
+
 
 
 load_dotenv()
