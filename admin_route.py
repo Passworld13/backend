@@ -1,25 +1,20 @@
 
 from flask import Blueprint, request, jsonify
-import json, os
-from dotenv import load_dotenv
+import json
+import os
 
-load_dotenv()
-ADMIN_SECRET = os.getenv("ADMIN_SECRET")
 GAME_STATE_FILE = "game_state.json"
+ADMIN_PASSWORD = "secretpassword"
 
 admin_bp = Blueprint('admin', __name__)
 
 @admin_bp.route("/admin/start_game", methods=["POST"])
 def start_game():
-    auth_header = request.headers.get("Authorization")
-    if not auth_header or not auth_header.startswith("Bearer "):
-        return jsonify({"error": "Unauthorized"}), 401
-
-    token = auth_header.split(" ")[1]
-    if token != ADMIN_SECRET:
-        return jsonify({"error": "Invalid token"}), 403
-
     data = request.get_json()
+
+    if data.get("admin_password") != ADMIN_PASSWORD:
+        return jsonify({"error": "Invalid password"}), 403
+
     word = data.get("word")
     hints = data.get("hints")
 
