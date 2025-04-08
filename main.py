@@ -10,7 +10,7 @@ load_dotenv()
 app = Flask(__name__)
 app.register_blueprint(wallet_bp, url_prefix="/")
 app.register_blueprint(guess_bp, url_prefix="/")
-app.register_blueprint(admin_bp)
+app.register_blueprint(admin_bp, url_prefix="/")
 
 
 if __name__ == "__main__":
