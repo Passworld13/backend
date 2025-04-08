@@ -7,10 +7,7 @@ load_dotenv()
 
 app = Flask(__name__)
 app.register_blueprint(wallet_bp, url_prefix="/")
-app.register_blueprint(guess_bp)
+app.register_blueprint(guess_bp, url_prefix="/")
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000, debug=True)
-# Just a comment to trigger redeploy
-
-
