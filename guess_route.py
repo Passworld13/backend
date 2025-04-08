@@ -1,9 +1,15 @@
 from flask import Blueprint, request, jsonify
+import os
+import hashlib
 
 guess_bp = Blueprint("guess", __name__)
 
-# Exemple simple : le mot du jour est en dur ici
-SECRET_WORD = "pain"
+# 🔐 Charger le mot depuis l'environnement (.env)
+SECRET_WORD = os.getenv("SECRET_WORD", "defaultword").lower()
+
+# 💥 Calculer et afficher le hash du mot du jour
+hashed_word = hashlib.sha256(SECRET_WORD.encode()).hexdigest()
+print(f"🔐 Hashed word of the day: {hashed_word}")
 
 @guess_bp.route("/guess", methods=["POST"])
 def guess():
