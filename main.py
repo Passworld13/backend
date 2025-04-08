@@ -6,7 +6,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 app = Flask(__name__)
-app.register_blueprint(wallet_bp)
+app.register_blueprint(wallet_bp, url_prefix="/")
 app.register_blueprint(guess_bp)
 
 if __name__ == "__main__":
