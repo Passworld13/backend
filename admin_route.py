@@ -33,3 +33,8 @@ def start_game():
         json.dump(game_state, f)
 
     return jsonify({"message": "Game started", "word": word, "hints": hints}), 200
+
+@admin_bp.route("/admin/test")
+def admin_test():
+    return jsonify({"message": "Admin route OK"}), 200
+
