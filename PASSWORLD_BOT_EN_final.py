@@ -195,7 +195,7 @@ async def handle_buttons(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await query.edit_message_text(msg)
 
 # === WALLET & SOLANA ===
-client = Client("https://api.mainnet-beta.solana.com")
+client = Client("https://api.mainnet-beta.solana.com", timeout=30)
 
 # === MAIN APP ===
 app = ApplicationBuilder().token("7900736485:AAH3a6mW89OSbpl3LkPZZaGjkvAEJueTnW0").build()
