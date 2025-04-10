@@ -17,7 +17,7 @@ INITIAL_BONK_PER_GUESS = 100000
 BONK_INCREMENT = 1
 HASH_SECRET = "super_secret_salt"
 INDICE_DU_JOUR = "It's about Law"
-WEB_CONNECT_URL = "https://yourdomain.com/connect"  # à remplacer par ton URL de connexion wallet
+WEB_CONNECT_URL = "url = "https://passworldgame.com/connect.html"  # à remplacer par ton URL de connexion wallet
 
 # === DATABASE SETUP ===
 conn = sqlite3.connect("bonkword.db", check_same_thread=False)
