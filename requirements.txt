@@ -1,7 +1,6 @@
 flask
 python-dotenv
 gunicorn
-solana
-python-telegram-bot==20.3
+solana==0.36.6
 httpx==0.23.0
-
+python-telegram-bot==20.0
