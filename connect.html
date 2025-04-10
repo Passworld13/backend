@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Connect Wallet</title>
+    <script 
+src="https://cdn.jsdelivr.net/npm/@solana/web3.js@latest/lib/index.iife.js"></script>
+  </head>
+  <body style="font-family: Arial, sans-serif; padding: 20px;">
+    <h2>Connect Your Wallet</h2>
+    <button onclick="connectWallet()" style="padding: 10px 20px;">Connect 
+Phantom</button>
+    <p id="status" style="margin-top: 20px;"></p>
+
+    <script>
+      async function connectWallet() {
+        const status = document.getElementById("status");
+
+        if (window.solana && window.solana.isPhantom) {
+          try {
+            const resp = await window.solana.connect();
+            const publicKey = resp.publicKey.toString();
+
+            status.innerText = "Connected wallet: " + publicKey;
+
+            // Tu peux ici faire un fetch() POST vers ton backend pour lui 
+envoyer publicKey
+            // fetch("/api/connect", {
+            //   method: "POST",
+            //   headers: { "Content-Type": "application/json" },
+            //   body: JSON.stringify({ wallet: publicKey })
+            // });
+
+          } catch (err) {
+            status.innerText = "Connection failed: " + err.message;
+          }
+        } else {
+          status.innerText = "Phantom Wallet not detected. Please install 
+it.";
+        }
+      }
+    </script>
+  </body>
+</html>
+
