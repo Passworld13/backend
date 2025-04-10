@@ -1,26 +1,42 @@
 from flask import Blueprint, request, jsonify
+import json
 import os
-import hashlib
 
-guess_bp = Blueprint("guess", __name__)
-
-# 🔐 Charger le mot depuis l'environnement (.env)
-SECRET_WORD = os.getenv("SECRET_WORD", "defaultword").lower()
-
-# 💥 Calculer et afficher le hash du mot du jour
-hashed_word = hashlib.sha256(SECRET_WORD.encode()).hexdigest()
-print(f"🔐 Hashed word of the day: {hashed_word}")
+guess_bp = Blueprint('guess', __name__)
+GAME_STATE_FILE = "game_state.json"
 
 @guess_bp.route("/guess", methods=["POST"])
-def guess():
+def guess_word():
     data = request.get_json()
+    user_guess = data.get("guess")
 
-    if not data or "wallet" not in data or "word" not in data:
-        return jsonify({"error": "Missing wallet or word"}), 400
+    if not user_guess:
+        return jsonify({"error": "Missing guess"}), 400
 
-    guess_word = data["word"].lower()
+    if not os.path.exists(GAME_STATE_FILE):
+        return jsonify({"error": "No game in progress"}), 400
 
-    if guess_word == SECRET_WORD:
-        return jsonify({"result": "correct", "message": "You guessed the word!"})
+    with open(GAME_STATE_FILE, "r") as f:
+        game_state = json.load(f)
+
+    correct_word = game_state.get("current_word")
+
+    if user_guess.lower() == correct_word:
+        response = {
+            "result": "correct",
+            "message": "🎉 Correct! You've guessed the word!",
+            "word": correct_word,
+            "pot_bonk": game_state.get("pot_bonk", 0)
+        }
     else:
-        return jsonify({"result": "incorrect", "message": "Try again."})
+        game_state["fail_count"] += 1
+        with open(GAME_STATE_FILE, "w") as f:
+            json.dump(game_state, f)
+        response = {
+            "result": "incorrect",
+            "message": "❌ Incorrect. Try again!",
+            "fail_count": game_state["fail_count"]
+        }
+
+    return jsonify(response), 200
+
