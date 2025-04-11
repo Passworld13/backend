@@ -235,6 +235,10 @@ def is_user_linked(telegram_id):
     return str(telegram_id) in linked_wallets
 
 # Update the /guess command
+
+from telebot import TeleBot
+
+bot = TeleBot("7900736485:AAH3a6mW89OSbpl3LkPZZaGjkvAEJueTnW0")  
 @bot.message_handler(commands=["guess"])
 def handle_guess(message):
     telegram_id = str(message.from_user.id)
