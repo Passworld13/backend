@@ -1,87 +1,69 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Connect Wallet</title>
-    <script 
+  <title>Connect Wallet</title>
+  <script 
 src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
-    <script 
+  <script 
 src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.js"></script>
 </head>
 <body>
-    <h2>Choose your wallet</h2>
+  <h2>Choose your wallet</h2>
 
-    <button onclick="connectPhantom()">🔮 Phantom (Solana)</button>
-    <button onclick="connectMetamask()">🦊 Metamask</button>
-    <button onclick="connectTrust()">🔐 Trust Wallet</button>
+  <button onclick="connectPhantom()">🔮 Phantom (Solana)</button>
+  <button onclick="connectEVM()">🦊 Metamask / Trust Wallet (EVM)</button>
 
-    <p id="status"></p>
+  <p id="status"></p>
 
-    <script>
-        const tg_id = new 
+  <script>
+    const tg_id = new 
 URLSearchParams(window.location.search).get('tg_id');
 
-        async function connectPhantom() {
-            if (!window.solana || !window.solana.isPhantom) {
-                alert("Phantom wallet not found");
-                return;
-            }
+    async function connectPhantom() {
+      if (!window.solana || !window.solana.isPhantom) {
+        alert("Phantom wallet not found");
+        return;
+      }
 
-            try {
-                const resp = await window.solana.connect();
-                const address = resp.publicKey.toString();
-                sendWalletToBackend(address);
-            } catch (err) {
-                console.error("Phantom error", err);
-            }
-        }
+      try {
+        const resp = await window.solana.connect();
+        const address = resp.publicKey.toString();
+        sendWalletToBackend(address);
+      } catch (err) {
+        console.error("Phantom connection error", err);
+      }
+    }
 
-        async function connectMetamask() {
-            if (!window.ethereum || !window.ethereum.isMetaMask) {
-                alert("Metamask not found");
-                return;
-            }
+    async function connectEVM() {
+      if (!window.ethereum) {
+        alert("No EVM wallet found (Metamask or Trust Wallet)");
+        return;
+      }
 
-            try {
-                const accounts = await window.ethereum.request({ method: 
+      try {
+        const accounts = await window.ethereum.request({ method: 
 'eth_requestAccounts' });
-                const address = accounts[0];
-                sendWalletToBackend(address);
-            } catch (err) {
-                console.error("Metamask error", err);
-            }
-        }
+        const address = accounts[0];
+        sendWalletToBackend(address);
+      } catch (err) {
+        console.error("EVM connection error", err);
+      }
+    }
 
-        async function connectTrust() {
-            if (!window.ethereum || !window.ethereum.isTrust) {
-                alert("Trust Wallet not found — essayez depuis l'app 
-mobile Trust.");
-                return;
-            }
+    async function sendWalletToBackend(address) {
+      const res = await fetch('/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ tg_id: tg_id, address: address })
+      });
 
-            try {
-                const accounts = await window.ethereum.request({ method: 
-'eth_requestAccounts' });
-                const address = accounts[0];
-                sendWalletToBackend(address);
-            } catch (err) {
-                console.error("Trust error", err);
-            }
-        }
-
-        async function sendWalletToBackend(address) {
-            const res = await fetch('/verify', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ tg_id: tg_id, address: address })
-            });
-
-            const data = await res.json();
-            document.getElementById("status").innerText = data.status === 
+      const data = await res.json();
+      document.getElementById("status").innerText = data.status === 
 "success"
-                ? "✅ Wallet connected: " + address
-                : "❌ Failed to verify wallet.";
-        }
-    </script>
+        ? "✅ Wallet connected: " + address
+        : "❌ Wallet verification failed.";
+    }
+  </script>
 </body>
 </html>
 
