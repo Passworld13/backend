@@ -283,8 +283,7 @@ def connect_wallet(update: Update, context: CallbackContext):
 
 import uuid  
 
-session_id = str(uuid.uuid4())  # ou récupère-le depuis la session 
-utilisateur si besoin
+session_id = str(uuid.uuid4())
 
 url = f"https://passworldgame.com/wallet?session_id={session_id}"
 link = f"https://passworldgame.com/connect.html?tgUserId={tg_id}"
