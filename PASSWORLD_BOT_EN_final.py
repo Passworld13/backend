@@ -9,7 +9,15 @@ import os
 from pathlib import Path
 from solana.rpc.api import Client
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes, CallbackQueryHandler
+from telegram.ext import (
+    ApplicationBuilder,
+    CommandHandler,
+    ContextTypes,
+    CallbackQueryHandler,
+    CallbackContext,
+)
+
+
 
 # === CONFIG ===
 BONKWORD_POT_ADDRESS = "BONK_WALLET_ADDRESS"
