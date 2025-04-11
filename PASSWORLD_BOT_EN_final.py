@@ -264,8 +264,7 @@ from telegram.ext import CallbackContext
 def connect_wallet(update: Update, context: CallbackContext):
     telegram_id = update.effective_user.id
     session_id = str(uuid.uuid4())
-    link = 
-f"https://passworldgame.com/connect.html?tgUserId={telegram_id}"
+    link = f"https://passworldgame.com/connect.html?tgUserId={telegram_id}"
     update.message.reply_text(f"Connecte ton wallet ici 🔗: {link}")
 
     # Save to sessions.json
