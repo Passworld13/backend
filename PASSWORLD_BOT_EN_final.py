@@ -258,8 +258,11 @@ def handle_guess(message):
     bot.register_next_step_handler(msg, process_guess_step)
 
 def connect_wallet(update: Update, context: CallbackContext):
-    telegram_id = update.effective_user.id
+    tg_id = update.effective_user.id
     session_id = str(uuid.uuid4())
+    link = f"https://passworldgame.com/connect.html?tgUserId={tg_id}"
+
+    update.message.reply_text(f"Connecte ton wallet ici 🔗: {link}")
 
     # Save to sessions.json
     if os.path.exists("sessions.json"):
