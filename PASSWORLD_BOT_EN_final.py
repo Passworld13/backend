@@ -204,3 +204,11 @@ app.add_handler(CallbackQueryHandler(handle_buttons))
 if __name__ == '__main__':
     print("Launching BONKWORD bot...")
     app.run_polling()
+
+# === Render-compatible Flask app ===
+from flask import Flask
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return "Bot is running!"
