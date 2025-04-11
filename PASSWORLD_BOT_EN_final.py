@@ -220,6 +220,10 @@ app = Flask(__name__)
 
 @app.route("/api/connect-wallet", methods=["POST"])
 def connect_wallet():
+    session_id = str(uuid.uuid4())
+    tg_id = update.effective_user.id
+    link = f"https://passworldgame.com/connect.html?tgUserId={tg_id}"
+    update.message.reply_text(f"Connecte ton wallet ici 🔗: {link}")
     data = request.get_json()
     wallet = data.get("wallet")
     telegram_id = data.get("telegram_id")
@@ -285,11 +289,6 @@ def connect_wallet(update: Update, context: CallbackContext):
 import uuid  
 
 session_id = str(uuid.uuid4())
-
-tg_id = update.effective_user.id
-
-url = f"https://passworldgame.com/wallet?session_id={session_id}"
-link = f"https://passworldgame.com/connect.html?tgUserId={tg_id}"
 update.message.reply_text(f"Connecte ton wallet ici 🔗: {link}")
 
 dispatcher.add_handler(CommandHandler("start", start))
