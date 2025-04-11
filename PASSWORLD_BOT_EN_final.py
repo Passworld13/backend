@@ -6,6 +6,7 @@ import uuid
 from solana.rpc.api import Client
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes, CallbackQueryHandler
+from wallet_connect import wallet_connect_bp
 
 # === CONFIG ===
 BONKWORD_POT_ADDRESS = "BONK_WALLET_ADDRESS"
@@ -206,9 +207,17 @@ if __name__ == '__main__':
     app.run_polling()
 
 # === Render-compatible Flask app ===
+# === Render-compatible Flask app ===
 from flask import Flask
-app = Flask(__name__)
+from wallet_connect import wallet_connect_bp
 
-@app.route('/')
+flask_app = Flask(__name__)
+flask_app.register_blueprint(wallet_connect_bp)
+
+@flask_app.route('/')
 def home():
     return "Bot is running!"
+
+# 👇 ligne cruciale pour Render
+app = flask_app
+
