@@ -1,6 +1,8 @@
 import hashlib
 import sqlite3
+import os
 import time
+import uuid
 import uuid
 import json
 import os
@@ -111,7 +113,8 @@ def deduct_credit(username):
 # === TELEGRAM BOT ===
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.message.from_user.username or update.message.from_user.first_name
-    # session_id = ...  # <- moved inside function
+    session_id = str(uuid.uuid4())
+session_id = 'dummy_session_id'  # Replace with real value as needed
     connect_link = f"{WEB_CONNECT_URL}?session={session_id}&user={user}"
     price = get_guess_price()
     attempts = get_guess_count()
@@ -261,7 +264,7 @@ from telegram.ext import CallbackContext
 
 def connect_wallet(update: Update, context: CallbackContext):
     telegram_id = update.effective_user.id
-    # session_id = ...  # <- moved inside function
+    session_id = str(uuid.uuid4())
     link = f"https://passworldgame.com/connect.html?tgUserId={telegram_id}"
     update.message.reply_text(f"Connecte ton wallet ici 🔗: {link}")
 
@@ -281,11 +284,11 @@ def connect_wallet(update: Update, context: CallbackContext):
 
 import uuid  
 
-# session_id = ...  # <- moved inside function
+session_id = str(uuid.uuid4())
 
-# tg_id = update.effective_user.id  # <- moved inside function
+tg_id = update.effective_user.id
 
-url = f"https://passworldgame.com/wallet?# session_id = ...  # <- moved inside function
+url = f"https://passworldgame.com/wallet?session_id={session_id}"
 link = f"https://passworldgame.com/connect.html?tgUserId={tg_id}"
 update.message.reply_text(f"Connecte ton wallet ici 🔗: {link}")
 
@@ -314,7 +317,3 @@ if __name__ == "__main__":
     app.run(host="0.0.0.0", port=10000)
 
 app.add_handler(CommandHandler("connect_wallet", connect_wallet))
-
-@app.route("/")
-def index():
-    return "Passworld bot is running!"
