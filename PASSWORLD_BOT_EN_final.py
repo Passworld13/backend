@@ -251,9 +251,10 @@ def connect_wallet(update: Update, context: CallbackContext):
 
     # Send URL
     url = f"https://passworldgame.com/wallet?session_id={session_id}"
-    update.message.reply_text(
-        f"🔗 Click below to connect your wallet securely:\n\n{url}"
-    )
+    tg_id = update.effective_user.id
+link = f"https://passworldgame.com/connect.html?tgUserId={tg_id}"
+update.message.reply_text(f"Connecte ton wallet ici 🔗: {link}")
+
 
 dispatcher.add_handler(CommandHandler("start", start))
 dispatcher.add_handler(CommandHandler("guess", guess))
@@ -261,3 +262,15 @@ dispatcher.add_handler(CommandHandler("connect_wallet", connect_wallet))
 
 updater.start_polling()
 updater.idle()
+
+from flask import request
+
+@app.route("/api/connect-wallet", methods=["POST"])
+def connect_wallet():
+    data = request.get_json()
+    wallet = data.get("wallet")
+    telegram_id = data.get("telegram_id")
+    print(f"[+] Wallet connecté: {wallet} pour Telegram ID: 
+{telegram_id}")
+    return {"status": "ok"}, 200
+
