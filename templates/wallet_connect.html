@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Connect Your Wallet</title>
+    <script 
+src="https://cdn.jsdelivr.net/npm/web3@latest/dist/web3.min.js"></script>
+    <script 
+src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.js"></script>
+    <script 
+src="https://cdn.jsdelivr.net/npm/ethers@6.7.0/dist/ethers.umd.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 60px;
+        }
+        button {
+            padding: 14px 24px;
+            font-size: 18px;
+            margin: 10px;
+            cursor: pointer;
+            border: none;
+            border-radius: 8px;
+        }
+        #wallet-info {
+            margin-top: 30px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Connect your Wallet</h1>
+
+    <button onclick="connectMetaMask()">🦊 MetaMask</button>
+    <button onclick="connectPhantom()">👻 Phantom</button>
+    <button onclick="connectWalletConnect()">🔗 WalletConnect</button>
+
+    <div id="wallet-info"></div>
+
+    <script>
+        async function connectMetaMask() {
+            if (typeof window.ethereum !== 'undefined') {
+                try {
+                    const accounts = await window.ethereum.request({ 
+method: 'eth_requestAccounts' });
+                    document.getElementById('wallet-info').innerText = 
+'MetaMask address: ' + accounts[0];
+                } catch (err) {
+                    alert('MetaMask connection failed.');
+                }
+            } else {
+                alert('MetaMask not installed!');
+            }
+        }
+
+        async function connectPhantom() {
+            const provider = window.solana;
+            if (provider?.isPhantom) {
+                try {
+                    const resp = await provider.connect();
+                    document.getElementById('wallet-info').innerText = 
+'Phantom address: ' + resp.publicKey.toString();
+                } catch (err) {
+                    alert('Phantom connection failed.');
+                }
+            } else {
+                alert('Phantom not installed!');
+            }
+        }
+
+        async function connectWalletConnect() {
+            alert("WalletConnect integration is planned soon. Stay 
+tuned!");
+        }
+    </script>
+
+</body>
+</html>
+
