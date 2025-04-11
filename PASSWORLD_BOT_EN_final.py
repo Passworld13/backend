@@ -212,15 +212,10 @@ app.add_handler(CommandHandler("start", start))
 app.add_handler(CommandHandler("guess", guess))
 app.add_handler(CommandHandler("guesses", guesses_list))
 app.add_handler(CallbackQueryHandler(handle_buttons))
-app.add_handler(CommandHandler("connect_wallet", connect_wallet))
+
 from flask import Flask, request
 
-
-@flask_app.route("/")
-def home():
-    return "Bot is running!"
-
-app = flask_app = Flask(__name__)
+app = Flask(__name__)
 
 @app.route("/api/connect-wallet", methods=["POST"])
 def connect_wallet():
@@ -230,6 +225,13 @@ def connect_wallet():
     print(f"[+] Wallet connecté: {wallet} pour Telegram ID: {telegram_id}")
     return {"status": "ok"}, 200
 
+if __name__ == '__main__':
+    print("Launching BONKWORD bot...")
+    app.run_polling()
+
+import json
+
+# Load linked wallets
 LINKED_WALLETS_FILE = "linked_wallets.json"
 if Path(LINKED_WALLETS_FILE).exists():
     with open(LINKED_WALLETS_FILE, "r") as f:
@@ -300,3 +302,11 @@ def connect_wallet():
     print(f"[+] Wallet connecté: {wallet} pour Telegram ID: {telegram_id}")
     return {"status": "ok"}, 200
 
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=10000)
+
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=10000)
+
+app.add_handler(CommandHandler("connect_wallet", connect_wallet))
