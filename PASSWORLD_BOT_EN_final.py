@@ -212,8 +212,7 @@ def connect_wallet():
     data = request.get_json()
     wallet = data.get("wallet")
     telegram_id = data.get("telegram_id")
-    print(f"[+] Wallet connecté: {wallet} pour Telegram ID: 
-{telegram_id}")
+    print(f"[+] Wallet connecté: {wallet} pour Telegram ID: {telegram_id}")
     return {"status": "ok"}, 200
 
 if __name__ == '__main__':
