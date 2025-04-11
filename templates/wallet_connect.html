@@ -11,7 +11,9 @@ src="https://unpkg.com/@solana/web3.js@latest/lib/index.iife.js"></script>
     <h2>Choose your wallet</h2>
 
     <button onclick="connectPhantom()">🔮 Phantom (Solana)</button>
-    <button onclick="connectMetamask()">🦊 Metamask (EVM)</button>
+    <button onclick="connectMetamask()">🦊 Metamask</button>
+    <button onclick="connectTrust()">🔐 Trust Wallet</button>
+
     <p id="status"></p>
 
     <script>
@@ -34,7 +36,7 @@ URLSearchParams(window.location.search).get('tg_id');
         }
 
         async function connectMetamask() {
-            if (!window.ethereum) {
+            if (!window.ethereum || !window.ethereum.isMetaMask) {
                 alert("Metamask not found");
                 return;
             }
@@ -46,6 +48,23 @@ URLSearchParams(window.location.search).get('tg_id');
                 sendWalletToBackend(address);
             } catch (err) {
                 console.error("Metamask error", err);
+            }
+        }
+
+        async function connectTrust() {
+            if (!window.ethereum || !window.ethereum.isTrust) {
+                alert("Trust Wallet not found — essayez depuis l'app 
+mobile Trust.");
+                return;
+            }
+
+            try {
+                const accounts = await window.ethereum.request({ method: 
+'eth_requestAccounts' });
+                const address = accounts[0];
+                sendWalletToBackend(address);
+            } catch (err) {
+                console.error("Trust error", err);
             }
         }
 
