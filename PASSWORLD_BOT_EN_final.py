@@ -280,6 +280,12 @@ def connect_wallet(update: Update, context: CallbackContext):
         json.dump(sessions, f, indent=2)
 
 # Send URL
+
+import uuid  
+
+session_id = str(uuid.uuid4())  # ou récupère-le depuis la session 
+utilisateur si besoin
+
 url = f"https://passworldgame.com/wallet?session_id={session_id}"
 link = f"https://passworldgame.com/connect.html?tgUserId={tg_id}"
 update.message.reply_text(f"Connecte ton wallet ici 🔗: {link}")
