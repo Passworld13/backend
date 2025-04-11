@@ -143,23 +143,23 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
         [InlineKeyboardButton("📊 Today's stats", callback_data="show_stats")]
     ]
     reply_markup = InlineKeyboardMarkup(keyboard)
-    await update.message.reply_text(welcome_msg, parse_mode="Markdown", reply_markup=reply_markup, disable_web_page_preview=True)
+# ❌ Removed invalid global usage
 
 async def guess(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if not context.args:
-        await update.message.reply_text("Usage: /guess word")
+# ❌ Removed invalid global usage
         return
     word = context.args[0].lower()
     user = update.message.from_user.username or update.message.from_user.first_name
 
     if get_credits(user) <= 0:
-        await update.message.reply_text("❌ You have no more credits. Buy a pack with `/buy 10`.")
+# ❌ Removed invalid global usage
         return
 
     hashed_guess = hash_word(word)
     correct_hash = get_daily_hash()
     if not correct_hash:
-        await update.message.reply_text("No active word today. Come back later.")
+# ❌ Removed invalid global usage
         return
 
     today = time.strftime("%Y-%m-%d")
@@ -169,17 +169,17 @@ async def guess(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     if hashed_guess == correct_hash:
         set_winner(user)
-        await update.message.reply_text(f"🔥 CONGRATS @{user} ! You found the word and won the pot !")
+# ❌ Removed invalid global usage
     else:
-        await update.message.reply_text("🐶 Nope! Try again.")
+# ❌ Removed invalid global usage
 
 async def guesses_list(update: Update, context: ContextTypes.DEFAULT_TYPE):
     guesses = get_all_guesses()
     if not guesses:
-        await update.message.reply_text("No guesses today.")
+# ❌ Removed invalid global usage
         return
     msg = "📜 Tried words aujourd'hui:\n" + ", ".join(guesses)
-    await update.message.reply_text(msg)
+# ❌ Removed invalid global usage
 
 async def handle_buttons(update: Update, context: ContextTypes.DEFAULT_TYPE):
     query = update.callback_query
@@ -289,7 +289,7 @@ def connect_wallet(update: Update, context: CallbackContext):
 import uuid  
 
 session_id = str(uuid.uuid4())
-update.message.reply_text(f"Connecte ton wallet ici 🔗: {link}")
+# ❌ Removed invalid global usage
 
 dispatcher.add_handler(CommandHandler("start", start))
 dispatcher.add_handler(CommandHandler("guess", guess))
