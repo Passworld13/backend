@@ -114,7 +114,7 @@ def deduct_credit(username):
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user = update.message.from_user.username or update.message.from_user.first_name
     session_id = str(uuid.uuid4())
-session_id = 'dummy_session_id'  # Replace with real value as needed
+    session_id = generate_session_id()  # ou ce que ta logique veut
     connect_link = f"{WEB_CONNECT_URL}?session={session_id}&user={user}"
     price = get_guess_price()
     attempts = get_guess_count()
