@@ -273,12 +273,11 @@ def connect_wallet(update: Update, context: CallbackContext):
     with open("sessions.json", "w") as f:
         json.dump(sessions, f, indent=2)
 
-    # Send URL
-   tg_id = update.effective_user.id
-   url = f"https://passworldgame.com/wallet?session_id={session_id}"
-   link = f"https://passworldgame.com/connect.html?tgUserId={tg_id}"
+# Send URL
+tg_id = update.effective_user.id
+url = f"https://passworldgame.com/wallet?session_id={session_id}"
+link = f"https://passworldgame.com/connect.html?tgUserId={tg_id}"
 update.message.reply_text(f"Connecte ton wallet ici 🔗: {link}")
-
 
 dispatcher.add_handler(CommandHandler("start", start))
 dispatcher.add_handler(CommandHandler("guess", guess))
