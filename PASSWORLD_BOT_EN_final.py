@@ -212,6 +212,7 @@ app.add_handler(CommandHandler("start", start))
 app.add_handler(CommandHandler("guess", guess))
 app.add_handler(CommandHandler("guesses", guesses_list))
 app.add_handler(CallbackQueryHandler(handle_buttons))
+app.add_handler(CommandHandler("connect_wallet", connect_wallet))
 from flask import Flask, request
 
 app = Flask(__name__)
@@ -261,7 +262,6 @@ def connect_wallet(update: Update, context: CallbackContext):
     tg_id = update.effective_user.id
     session_id = str(uuid.uuid4())
     link = f"https://passworldgame.com/connect.html?tgUserId={tg_id}"
-
     update.message.reply_text(f"Connecte ton wallet ici 🔗: {link}")
 
     # Save to sessions.json
