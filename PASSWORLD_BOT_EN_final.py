@@ -139,6 +139,17 @@ async def guess(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return
     word = context.args[0].lower()
     user = update.message.from_user.username or update.message.from_user.first_name
+ 
+ # Vérifie que l'utilisateur a bien connecté son wallet et qu'il est 
+vérifié
+    wallet = get_wallet(user)
+    c.execute("SELECT is_verified FROM wallets WHERE username = ?", 
+(user,))
+    row = c.fetchone()
+    if not row or row[0] != 1:
+        await update.message.reply_text("❌ You must connect your wallet 
+before guessing. Use /start.")
+        return
 
     if get_credits(user) <= 0:
         await update.message.reply_text("❌ You have no more credits. Buy a pack with `/buy 10`.")
