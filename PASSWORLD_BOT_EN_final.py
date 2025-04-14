@@ -146,8 +146,7 @@ async def guess(update: Update, context: ContextTypes.DEFAULT_TYPE):
 (user,))
     row = c.fetchone()
     if not row or row[0] != 1:
-        await update.message.reply_text("❌ You must connect your wallet 
-before guessing. Use /start.")
+        await update.message.reply_text("❌ You must connect your wallet before guessing. Use /start.")
         return
 
     if get_credits(user) <= 0:
