@@ -140,8 +140,7 @@ async def guess(update: Update, context: ContextTypes.DEFAULT_TYPE):
     word = context.args[0].lower()
     user = update.message.from_user.username or update.message.from_user.first_name
  
- # Vérifie que l'utilisateur a bien connecté son wallet et qu'il est 
-vérifié
+ # Vérifie que l'utilisateur a bien connecté son wallet et qu'il est vérifié
     wallet = get_wallet(user)
     c.execute("SELECT is_verified FROM wallets WHERE username = ?", 
 (user,))
