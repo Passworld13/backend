@@ -168,7 +168,7 @@ async def guess(update: Update, context: ContextTypes.DEFAULT_TYPE):
  # Envoyer publiquement le guess dans le canal
     await context.bot.send_message(
         chat_id=PUBLIC_CHANNEL_ID,
-        text=f"🔍 @{user} a tenté : *{word}*",
+        text=f"🔍 @{user} is trying : *{word}*",
         parse_mode="Markdown"
     )
 
