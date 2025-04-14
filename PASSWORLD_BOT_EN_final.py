@@ -16,6 +16,7 @@ BONK_INCREMENT = 1
 HASH_SECRET = "super_secret_salt"
 INDICE_DU_JOUR = "It's about Law"
 WEB_CONNECT_URL = "https://passworld-backend.onrender.com/connect"  # à remplacer par ton URL de connexion wallet
+PUBLIC_CHANNEL_ID = -1002638589913
 
 # === DATABASE SETUP ===
 conn = sqlite3.connect("bonkword.db", check_same_thread=False)
@@ -163,6 +164,13 @@ async def guess(update: Update, context: ContextTypes.DEFAULT_TYPE):
     c.execute("INSERT INTO guesses (username, guess, date) VALUES (?, ?, ?)", (user, word, today))
     deduct_credit(user)
     conn.commit()
+    
+ # Envoyer publiquement le guess dans le canal
+    await context.bot.send_message(
+        chat_id=PUBLIC_CHANNEL_ID,
+        text=f"🔍 @{user} a tenté : *{word}*",
+        parse_mode="Markdown"
+    )
 
     if hashed_guess == correct_hash:
         set_winner(user)
