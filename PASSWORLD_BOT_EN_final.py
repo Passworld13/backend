@@ -172,6 +172,18 @@ async def guess(update: Update, context: ContextTypes.DEFAULT_TYPE):
         parse_mode="Markdown"
     )
 
+    await context.bot.send_message(
+    chat_id=GUESS_FEED_CHANNEL,
+    text=f"🕵️ @{user} a tenté : *{word}*",
+    parse_mode="Markdown"
+    )
+
+    await context.bot.send_message(
+    chat_id=GUESS_FEED_CHANNEL,
+    text=f"🏆 @{user} a trouvé le mot du jour : *{word}* ! Bravo !",
+    parse_mode="Markdown"
+    )
+
     if hashed_guess == correct_hash:
         set_winner(user)
         await update.message.reply_text(f"🔥 CONGRATS @{user} ! You found the word and won the pot !")
