@@ -221,6 +221,20 @@ async def handle_buttons(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
         await query.edit_message_text(msg)
 
+async def stats(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    price = get_guess_price()
+    attempts = get_guess_count()
+    players = get_unique_users()
+    
+    msg = (
+        f"📊 *Stats du jour* :\n"
+        f"• 💰 *Pot estimé* : {price * attempts} BONK\n"
+        f"• 🔁 *Nombre de tentatives* : {attempts}\n"
+        f"• 👥 *Joueurs uniques* : {players}\n"
+        f"🧩 *Indice* : {INDICE_DU_JOUR}"
+    )
+    await update.message.reply_text(msg, parse_mode="Markdown")
+
 # === WALLET & SOLANA ===
 client = Client("https://api.mainnet-beta.solana.com")
 
@@ -230,6 +244,7 @@ app.add_handler(CommandHandler("start", start))
 app.add_handler(CommandHandler("guess", guess))
 app.add_handler(CommandHandler("guesses", guesses_list))
 app.add_handler(CallbackQueryHandler(handle_buttons))
+app.add_handler(CommandHandler("stats", stats))
 
 if __name__ == '__main__':
     print("Launching BONKWORD bot...")
