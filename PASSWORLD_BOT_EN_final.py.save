@@ -15,8 +15,7 @@ INITIAL_BONK_PER_GUESS = 100000
 BONK_INCREMENT = 1
 HASH_SECRET = "super_secret_salt"
 INDICE_DU_JOUR = "It's about Law"
-WEB_CONNECT_URL = "https://passworld-backend.onrender.com/connect"  # à remplacer par ton URL de connexion wallet
-PUBLIC_CHANNEL_ID = -1002638589913
+WEB_CONNECT_URL = "https://yourdomain.com/connect"  # à remplacer par ton URL de connexion wallet
 
 # === DATABASE SETUP ===
 conn = sqlite3.connect("bonkword.db", check_same_thread=False)
@@ -41,13 +40,6 @@ CREATE TABLE IF NOT EXISTS wallets (
     username TEXT PRIMARY KEY,
     wallet TEXT,
     credits INTEGER DEFAULT 0
-)
-""")
-c.execute("""
-CREATE TABLE IF NOT EXISTS players_stats (
-    username TEXT PRIMARY KEY,
-    wins INTEGER DEFAULT 0,
-    attempts INTEGER DEFAULT 0
 )
 """)
 conn.commit()
@@ -148,13 +140,15 @@ async def guess(update: Update, context: ContextTypes.DEFAULT_TYPE):
     word = context.args[0].lower()
     user = update.message.from_user.username or update.message.from_user.first_name
  
- # Vérifie que l'utilisateur a bien connecté son wallet et qu'il est vérifié
+ # Vérifie que l'utilisateur a bien connecté son wallet et qu'il est 
+vérifié
     wallet = get_wallet(user)
     c.execute("SELECT is_verified FROM wallets WHERE username = ?", 
 (user,))
     row = c.fetchone()
     if not row or row[0] != 1:
-        await update.message.reply_text("❌ You must connect your wallet before guessing. Use /start.")
+        await update.message.reply_text("❌ You must connect your wallet 
+before guessing. Use /start.")
         return
 
     if get_credits(user) <= 0:
@@ -170,36 +164,13 @@ async def guess(update: Update, context: ContextTypes.DEFAULT_TYPE):
     today = time.strftime("%Y-%m-%d")
     c.execute("INSERT INTO guesses (username, guess, date) VALUES (?, ?, ?)", (user, word, today))
     deduct_credit(user)
-    c.execute("INSERT OR IGNORE INTO players_stats (username) VALUES (?)", (user,))
-    c.execute("UPDATE players_stats SET attempts = attempts + 1 WHERE username = ?", (user,))
     conn.commit()
-    
- # Envoyer publiquement le guess dans le canal
-    await context.bot.send_message(
-        chat_id=PUBLIC_CHANNEL_ID,
-        text=f"🔍 @{user} is trying : *{word}*",
-        parse_mode="Markdown"
-    )
-
-    await context.bot.send_message(
-    chat_id=GUESS_FEED_CHANNEL,
-    text=f"🕵️ @{user} a tenté : *{word}*",
-    parse_mode="Markdown"
-    )
-
-    await context.bot.send_message(
-    chat_id=GUESS_FEED_CHANNEL,
-    text=f"🏆 @{user} a trouvé le mot du jour : *{word}* ! Bravo !",
-    parse_mode="Markdown"
-    )
 
     if hashed_guess == correct_hash:
         set_winner(user)
         await update.message.reply_text(f"🔥 CONGRATS @{user} ! You found the word and won the pot !")
     else:
         await update.message.reply_text("🐶 Nope! Try again.")
-
-    c.execute("UPDATE players_stats SET wins = wins + 1 WHERE username = ?", (user,))
 
 async def guesses_list(update: Update, context: ContextTypes.DEFAULT_TYPE):
     guesses = get_all_guesses()
@@ -232,33 +203,6 @@ async def handle_buttons(update: Update, context: ContextTypes.DEFAULT_TYPE):
         )
         await query.edit_message_text(msg)
 
-async def stats(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    price = get_guess_price()
-    attempts = get_guess_count()
-    players = get_unique_users()
-    
-    msg = (
-        f"📊 *Stats du jour* :\n"
-        f"• 💰 *Pot estimé* : {price * attempts} BONK\n"
-        f"• 🔁 *Nombre de tentatives* : {attempts}\n"
-        f"• 👥 *Joueurs uniques* : {players}\n"
-        f"🧩 *Indice* : {INDICE_DU_JOUR}"
-    )
-    await update.message.reply_text(msg, parse_mode="Markdown")
-
-async def leaderboard(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    c.execute("SELECT username, wins, attempts FROM players_stats ORDER BY wins DESC, attempts DESC LIMIT 10")
-    rows = c.fetchall()
-    if not rows:
-        await update.message.reply_text("No stats yet.")
-        return
-
-    msg = "🏆 *Leaderboard*\n\n"
-    for i, (user, wins, attempts) in enumerate(rows, 1):
-        msg += f"{i}. @{user} — {wins} 🥇 / {attempts} 🎯\n"
-    
-    await update.message.reply_text(msg, parse_mode="Markdown")
-
 # === WALLET & SOLANA ===
 client = Client("https://api.mainnet-beta.solana.com")
 
@@ -268,8 +212,6 @@ app.add_handler(CommandHandler("start", start))
 app.add_handler(CommandHandler("guess", guess))
 app.add_handler(CommandHandler("guesses", guesses_list))
 app.add_handler(CallbackQueryHandler(handle_buttons))
-app.add_handler(CommandHandler("stats", stats))
-app.add_handler(CommandHandler("leaderboard", leaderboard))
 
 if __name__ == '__main__':
     print("Launching BONKWORD bot...")
